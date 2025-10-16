@@ -3,7 +3,6 @@ license: apache-2.0
 pipeline_tag: image-text-to-text
 tags:
 - ERNIE4.5
-- PaddleOCR
 - PaddlePaddle
 - image-to-text
 - ocr
@@ -17,7 +16,6 @@ language:
 - en
 - zh
 - multilingual
-# library_name: PaddleOCR
 ---
 
 <div align="center">
@@ -291,4 +289,3 @@ If you find PaddleOCR-VL helpful, feel free to give us a star and citation.
       howpublished={\url{https://ernie.baidu.com/blog/publication/PaddleOCR-VL_Technical_Report.pdf}}
 }
 ```
-
