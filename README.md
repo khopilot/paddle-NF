@@ -244,31 +244,32 @@ The evaluation set is broadly categorized into 11 chart categories, including ba
 ### Text
 
 <div align="center">
-<img src="./imgs/text_english_arabic.jpg" width="200"/>
-<img src="./imgs/text_handwriting_02.jpg" width="200"/>
+<img src="./imgs/text_english_arabic.jpg" width="300" style="display: inline-block;"/>
+<img src="./imgs/text_handwriting_02.jpg" width="300" style="display: inline-block;"/>
 </div>
 
 
 ### Table
 
 <div align="center">
-<img src="./imgs/table_01.jpg" width="200"/>
-<img src="./imgs/table_02.jpg" width="200"/>
+<img src="./imgs/table_01.jpg" width="300" style="display: inline-block;"/>
+<img src="./imgs/table_02.jpg" width="300" style="display: inline-block;"/>
 </div>
 
 
 ### Formula
 
 <div align="center">
-<img src="./imgs/formula_EN.jpg" width="200"/>
-<img src="./imgs/formula_EN.jpg" width="200"/>
+<img src="./imgs/formula_EN.jpg" width="300" style="display: inline-block;"/>
+<img src="./imgs/formula_ZH.jpg" width="300" style="display: inline-block;"/>
 </div>
+
 
 ### Chart
 
 <div align="center">
-<img src="./imgs/chart_01.jpg" width="200"/>
-<img src="./imgs/chart_02.jpg" width="200"/>
+  <img src="./imgs/chart_01.jpg" width="300" style="display: inline-block;"/>
+  <img src="./imgs/chart_02.jpg" width="300" style="display: inline-block;"/>
 </div>
 
 
