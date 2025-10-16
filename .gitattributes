@@ -54,3 +54,4 @@ imgs/table_01.jpg filter=lfs diff=lfs merge=lfs -text
 imgs/table_02.jpg filter=lfs diff=lfs merge=lfs -text
 imgs/text_english_arabic.jpg filter=lfs diff=lfs merge=lfs -text
 imgs/text_handwriting_02.jpg filter=lfs diff=lfs merge=lfs -text
+imgs/formula_ZH.jpg filter=lfs diff=lfs merge=lfs -text
