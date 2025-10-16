@@ -82,14 +82,18 @@ Install [PaddlePaddle](https://www.paddlepaddle.org.cn/install/quick) and [Paddl
 ```bash
 python -m pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 python -m pip install -U "paddleocr[doc-parser]"
+python -m pip install https://paddle-whl.bj.bcebos.com/nightly/cu126/safetensors/safetensors-0.6.2.dev0-cp38-abi3-linux_x86_64.whl
 ```
+
+> For Windows users, please use WSL or a Docker container.
+
 
 ### Basic Usage
 
 CLI usage:
 
 ```bash
-paddleocr doc_parser -i https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_ocr_vl_demo.png
+paddleocr doc_parser -i https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 ```
 
 Python API usage:
@@ -98,7 +102,7 @@ Python API usage:
 from paddleocr import PaddleOCRVL
 
 pipeline = PaddleOCRVL()
-output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_ocr_vl_demo.png")
+output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png")
 for res in output:
     res.print()
     res.save_to_json(save_path="output")
@@ -115,23 +119,22 @@ for res in output:
         --gpus all \
         --network host \
         ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server
-    # You can also use ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server for the SGLang server
     ```
 
 2. Call the PaddleOCR CLI or Python API:
 
     ```bash
     paddleocr doc_parser \
-        -i https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_ocr_vl_demo.png \
+        -i https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png \
         --vl_rec_backend vllm-server \
-        --vl_rec_server_url http://127.0.0.1:8080
+        --vl_rec_server_url http://127.0.0.1:8080/v1
     ```
 
     ```python
     from paddleocr import PaddleOCRVL
 
-    pipeline = PaddleOCRVL(vl_rec_backend="vllm-server", vl_rec_server_url="http://127.0.0.1:8080")
-    output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_ocr_vl_demo.png")
+    pipeline = PaddleOCRVL(vl_rec_backend="vllm-server", vl_rec_server_url="http://127.0.0.1:8080/v1")
+    output = pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png")
     for res in output:
         res.print()
         res.save_to_json(save_path="output")
