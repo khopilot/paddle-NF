@@ -141,6 +141,8 @@ for res in output:
         res.save_to_json(save_path="output")
         res.save_to_markdown(save_path="output")
     ```
+  
+**For more usage details and parameter explanations, see the [documentation](https://www.paddleocr.ai/latest/en/version3.x/pipeline_usage/PaddleOCR-VL.html).**
 
 ## Performance
 
@@ -154,7 +156,6 @@ for res in output:
 <div align="center">
 <img src="./imgs/omni15.png" width="800"/>
 </div>
-
 
 
 
