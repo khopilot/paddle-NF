@@ -16,6 +16,7 @@ language:
 - en
 - zh
 - multilingual
+library_name: PaddleOCR
 ---
 
 <div align="center">
