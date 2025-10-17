@@ -286,11 +286,13 @@ We would like to thank [ERNIE](https://github.com/PaddlePaddle/ERNIE), [Keye](ht
 If you find PaddleOCR-VL helpful, feel free to give us a star and citation.
 
 ```bibtex
-@misc{paddleocrvl2025technicalreport,
-      title={PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vision-Language Model},
-      author={Cui, C. et al.},
+@misc{cui2025paddleocrvlboostingmultilingualdocument,
+      title={PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vision-Language Model}, 
+      author={Cheng Cui and Ting Sun and Suyin Liang and Tingquan Gao and Zelun Zhang and Jiaxuan Liu and Xueqing Wang and Changda Zhou and Hongen Liu and Manhui Lin and Yue Zhang and Yubo Zhang and Handong Zheng and Jing Zhang and Jun Zhang and Yi Liu and Dianhai Yu and Yanjun Ma},
       year={2025},
-      primaryClass={cs.CL},
-      howpublished={\url{https://ernie.baidu.com/blog/publication/PaddleOCR-VL_Technical_Report.pdf}}
+      eprint={2510.14528},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2510.14528}, 
 }
 ```
