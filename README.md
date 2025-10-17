@@ -37,7 +37,7 @@ PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vi
 [![License](https://img.shields.io/badge/license-Apache_2.0-green)](./LICENSE)
 
 **🔥 Official Demo**: [Baidu AI Studio](https://aistudio.baidu.com/application/detail/98365) | 
-**📝 Blog**: [Technical Report](https://ernie.baidu.com/blog/publication/PaddleOCR-VL_Technical_Report.pdf)
+**📝 arXiv**: [Technical Report](https://arxiv.org/pdf/2510.14528)
 
 </div>
 
