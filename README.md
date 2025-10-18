@@ -1,7 +1,9 @@
+---
 license: apache-2.0
 pipeline_tag: image-text-to-text
 tags:
 - ERNIE4.5
+- PaddleOCR
 - PaddlePaddle
 - image-to-text
 - ocr
@@ -17,6 +19,7 @@ language:
 - multilingual
 library_name: PaddleOCR
 ---
+
 <div align="center">
 
 
