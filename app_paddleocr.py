@@ -103,20 +103,44 @@ async def extract_text(file: UploadFile = File(...)):
         output = pipeline.predict(str(temp_path))
         proc_time = time.time() - start
 
-        # Extract text from output
+        # DEBUG: Save output structure to temp file for inspection
+        import tempfile
+        debug_dir = Path("/tmp/debug_output")
+        debug_dir.mkdir(exist_ok=True)
+
+        # Try to use built-in save methods
         text_parts = []
         json_results = []
 
-        for res in output:
-            # Get text content
-            if hasattr(res, 'content'):
-                text_parts.append(res.content)
+        for idx, res in enumerate(output):
+            try:
+                # Save to JSON using built-in method
+                json_save_path = str(debug_dir / f"result_{idx}")
+                res.save_to_json(save_path=json_save_path)
 
-            # Also get JSON/dict representation
-            if hasattr(res, 'to_dict'):
-                json_results.append(res.to_dict())
+                # Also try markdown
+                md_save_path = str(debug_dir / f"result_{idx}")
+                res.save_to_markdown(save_path=md_save_path)
 
-        extracted_text = '\n'.join(text_parts)
+                # Read the saved JSON
+                json_file = Path(json_save_path) / f"{temp_path.stem}.json"
+                if json_file.exists():
+                    with open(json_file, 'r', encoding='utf-8') as f:
+                        result_data = json.load(f)
+                        json_results.append(result_data)
+
+                # Read the saved markdown
+                md_file = Path(md_save_path) / f"{temp_path.stem}.md"
+                if md_file.exists():
+                    with open(md_file, 'r', encoding='utf-8') as f:
+                        md_text = f.read()
+                        text_parts.append(md_text)
+
+            except Exception as e:
+                # Fallback: try to get any string representation
+                text_parts.append(f"Error extracting result {idx}: {str(e)}\nResult type: {type(res)}\nResult: {str(res)[:500]}")
+
+        extracted_text = '\n'.join(text_parts) if text_parts else "No text extracted"
 
         # Clean up temp file
         temp_path.unlink()
