@@ -1,0 +1,19 @@
+# Test files
+*.pdf
+*.txt
+*_test*/
+*.png
+venv*/
+__pycache__/
+*.pyc
+demo_results/
+ocr_test*/
+single_image_output.txt
+
+# macOS
+.DS_Store
+
+# Python
+*.egg-info/
+dist/
+build/

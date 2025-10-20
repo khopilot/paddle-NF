@@ -1,0 +1,48 @@
+# Docker ignore file for Northflank deployment
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv*/
+env/
+ENV/
+
+# Test files and results
+*_test*/
+demo_results/
+ocr_test*/
+*.pdf
+*.txt
+temp_*.png
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Documentation
+*.md
+!README.md
+
+# Large model files (will be downloaded in Dockerfile)
+PaddleOCR-VL-0.9B/
+PP-DocLayoutV2/
+imgs/
+
+# Misc
+claude_skills/
