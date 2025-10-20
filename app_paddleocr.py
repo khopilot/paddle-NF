@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
 """
-FastAPI service for PaddleOCR-VL using the OFFICIAL PaddleOCR API
-This is the correct way to use PaddleOCR-VL!
+FastAPI service for PaddleOCR-VL - FINAL CORRECT VERSION
+Uses official PaddleOCR API exactly as documented
 """
 
 import uvicorn
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
-import time
 from pathlib import Path
+import time
 import json
+import os
 
 app = FastAPI(
     title="PaddleOCR-VL Service",
-    description="Official PaddleOCR-VL API using PaddlePaddle",
+    description="Official PaddleOCR-VL with PaddlePaddle",
     version="1.0.0"
 )
 
-# Global pipeline
 pipeline = None
 
 @app.on_event("startup")
 async def load_model():
-    """Load PaddleOCR-VL pipeline on startup"""
+    """Load PaddleOCR-VL pipeline"""
     global pipeline
 
     print("="*80)
@@ -33,7 +32,7 @@ async def load_model():
         from paddleocr import PaddleOCRVL
         import paddle
 
-        # Check if GPU is available
+        # Check GPU
         if paddle.is_compiled_with_cuda():
             print(f"✓ Using NVIDIA GPU with CUDA")
             print(f"✓ GPU Count: {paddle.device.cuda.device_count()}")
@@ -44,7 +43,7 @@ async def load_model():
         else:
             print("⚠ Running on CPU")
 
-        # Initialize pipeline (will auto-download model if needed)
+        # Initialize pipeline
         start = time.time()
         pipeline = PaddleOCRVL()
         load_time = time.time() - start
@@ -81,82 +80,91 @@ async def health():
 @app.post("/ocr/extract")
 async def extract_text(file: UploadFile = File(...)):
     """
-    Extract text from uploaded image using PaddleOCR-VL
+    Extract text from image using PaddleOCR-VL
 
-    Returns:
-    - extracted_text: OCR text output
-    - processing_time: Time taken
-    - format: Output format (markdown/json)
+    The official API uses res.save_to_json() and res.save_to_markdown()
+    which save files to a directory
     """
     if pipeline is None:
         raise HTTPException(status_code=503, detail="Pipeline not loaded")
 
+    temp_image_path = None
+    output_dir = Path("/tmp/paddleocr_output")
+    output_dir.mkdir(exist_ok=True)
+
     try:
-        # Save uploaded file temporarily
-        temp_path = Path(f"/tmp/{file.filename}")
+        # Save uploaded image
+        temp_image_path = Path(f"/tmp/{file.filename}")
         contents = await file.read()
-        with open(temp_path, 'wb') as f:
+        with open(temp_image_path, 'wb') as f:
             f.write(contents)
 
-        # Process with PaddleOCR-VL
+        # Process with PaddleOCR-VL using official API
         start = time.time()
-        output = pipeline.predict(str(temp_path))
+        output = pipeline.predict(str(temp_image_path))
         proc_time = time.time() - start
 
-        # DEBUG: Save output structure to temp file for inspection
-        import tempfile
-        debug_dir = Path("/tmp/debug_output")
-        debug_dir.mkdir(exist_ok=True)
-
-        # Try to use built-in save methods
-        text_parts = []
-        json_results = []
+        # Extract results using official methods
+        all_text = []
+        all_json = []
 
         for idx, res in enumerate(output):
-            try:
-                # Save to JSON using built-in method
-                json_save_path = str(debug_dir / f"result_{idx}")
-                res.save_to_json(save_path=json_save_path)
+            # Save to JSON (creates files in the directory)
+            json_dir = output_dir / f"json_{idx}"
+            json_dir.mkdir(exist_ok=True)
+            res.save_to_json(save_path=str(json_dir))
 
-                # Also try markdown
-                md_save_path = str(debug_dir / f"result_{idx}")
-                res.save_to_markdown(save_path=md_save_path)
+            # Save to Markdown
+            md_dir = output_dir / f"md_{idx}"
+            md_dir.mkdir(exist_ok=True)
+            res.save_to_markdown(save_path=str(md_dir))
 
-                # Read the saved JSON
-                json_file = Path(json_save_path) / f"{temp_path.stem}.json"
-                if json_file.exists():
-                    with open(json_file, 'r', encoding='utf-8') as f:
-                        result_data = json.load(f)
-                        json_results.append(result_data)
+            # Read the generated JSON file
+            # The filename is based on the input image name (without extension)
+            base_name = temp_image_path.stem
+            json_file = json_dir / f"{base_name}.json"
 
-                # Read the saved markdown
-                md_file = Path(md_save_path) / f"{temp_path.stem}.md"
-                if md_file.exists():
-                    with open(md_file, 'r', encoding='utf-8') as f:
-                        md_text = f.read()
-                        text_parts.append(md_text)
+            if json_file.exists():
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    all_json.append(data)
 
-            except Exception as e:
-                # Fallback: try to get any string representation
-                text_parts.append(f"Error extracting result {idx}: {str(e)}\nResult type: {type(res)}\nResult: {str(res)[:500]}")
+                    # Extract text from JSON structure
+                    # The JSON contains the parsed document structure
+                    if isinstance(data, dict):
+                        # Try to get text content
+                        if 'content' in data:
+                            all_text.append(data['content'])
+                        elif 'text' in data:
+                            all_text.append(data['text'])
+                        else:
+                            # Fallback: convert entire JSON to text
+                            all_text.append(json.dumps(data, ensure_ascii=False, indent=2))
 
-        extracted_text = '\n'.join(text_parts) if text_parts else "No text extracted"
+            # Read the generated markdown file
+            md_file = md_dir / f"{base_name}.md"
+            if md_file.exists() and not json_file.exists():
+                with open(md_file, 'r', encoding='utf-8') as f:
+                    all_text.append(f.read())
 
-        # Clean up temp file
-        temp_path.unlink()
+        extracted_text = '\n\n'.join(all_text) if all_text else "No text extracted"
+
+        # Cleanup
+        if temp_image_path and temp_image_path.exists():
+            temp_image_path.unlink()
 
         return {
             "extracted_text": extracted_text,
             "processing_time": proc_time,
             "backend": "PaddlePaddle",
             "results_count": len(output),
-            "detailed_results": json_results
+            "detailed_results": all_json
         }
 
     except Exception as e:
-        # Clean up on error
-        if temp_path.exists():
-            temp_path.unlink()
+        # Cleanup on error
+        if temp_image_path and temp_image_path.exists():
+            temp_image_path.unlink()
         raise HTTPException(status_code=500, detail=f"OCR failed: {str(e)}")
 
 
